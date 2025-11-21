@@ -13,8 +13,8 @@ const FinalCTA = () => {
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            📲 Pronto para começar a ganhar dinheiro de verdade?
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-background">
+            Pronto para começar a ganhar dinheiro de verdade?
           </h2>
           
           <p className="text-xl mb-4">
@@ -23,7 +23,7 @@ const FinalCTA = () => {
           
           <div className="flex items-center justify-center gap-2 mb-8">
             <Clock className="w-5 h-5 text-primary" />
-            <p className="text-lg font-semibold text-primary">
+            <p className="text-lg font-semibold text-background">
               As vagas são limitadas devido à alta demanda.
             </p>
           </div>

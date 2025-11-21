@@ -15,7 +15,7 @@ const Hero = () => {
           <div className="bg-background/10 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-primary/20 shadow-2xl">
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
               <span className="text-background">Trabalhe como Driver de Cargovan</span>
-              <span className="block text-4xl md:text-6xl lg:text-7xl text-primary mt-4 animate-pulse-slow">
+              <span className="block text-4xl md:text-6xl lg:text-7xl text-primary mt-4 animate-pulse-slow drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                 $10.000 a $16.000/mês
               </span>
               <span className="block text-2xl md:text-3xl lg:text-4xl text-background/95 mt-4">

@@ -5,13 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { LogOut } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { LogOut, Trash2, Download } from "lucide-react";
+import * as XLSX from "xlsx";
+import { useToast } from "@/hooks/use-toast";
 
 const AdminRespostas = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [applications, setApplications] = useState<any[]>([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   useEffect(() => {
     const auth = sessionStorage.getItem("admin_auth");
@@ -43,6 +48,78 @@ const AdminRespostas = () => {
     setPassword("");
   };
 
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedIds(applications.map((_, index) => index));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleSelectOne = (index: number, checked: boolean) => {
+    if (checked) {
+      setSelectedIds([...selectedIds, index]);
+    } else {
+      setSelectedIds(selectedIds.filter(id => id !== index));
+    }
+  };
+
+  const handleDeleteSelected = () => {
+    if (selectedIds.length === 0) {
+      toast({
+        title: "Nenhuma seleção",
+        description: "Selecione pelo menos uma aplicação para excluir.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const confirmed = window.confirm(`Deseja excluir ${selectedIds.length} aplicação(ões)?`);
+    if (confirmed) {
+      const newApplications = applications.filter((_, index) => !selectedIds.includes(index));
+      localStorage.setItem("tex_applications", JSON.stringify(newApplications));
+      setApplications(newApplications);
+      setSelectedIds([]);
+      toast({
+        title: "Sucesso",
+        description: `${selectedIds.length} aplicação(ões) excluída(s).`,
+      });
+    }
+  };
+
+  const handleExportToExcel = () => {
+    if (applications.length === 0) {
+      toast({
+        title: "Nenhum dado",
+        description: "Não há aplicações para exportar.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const exportData = applications.map(app => ({
+      Data: new Date(app.timestamp).toLocaleDateString(),
+      Nome: app.nomeCompleto,
+      Email: app.email,
+      Telefone: app.telefone,
+      Idade: app.idade,
+      "Experiência": app.temExperiencia,
+      Inglês: app.nivelIngles,
+      "Disponível": app.disponivelImediato,
+      Motivação: app.motivacao,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Aplicações");
+    XLSX.writeFile(workbook, `tex_aplicacoes_${new Date().toISOString().split('T')[0]}.xlsx`);
+    
+    toast({
+      title: "Exportado com sucesso",
+      description: "O arquivo Excel foi baixado.",
+    });
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-muted">
@@ -71,18 +148,38 @@ const AdminRespostas = () => {
     <div className="min-h-screen bg-muted">
       <Header />
       <div className="container mx-auto px-4 py-12">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           <h1 className="text-3xl font-bold">Aplicações Recebidas</h1>
-          <Button onClick={handleLogout} variant="outline">
-            <LogOut className="mr-2 h-4 w-4" />
-            Sair
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button 
+              onClick={handleDeleteSelected} 
+              variant="destructive"
+              disabled={selectedIds.length === 0}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Excluir Selecionados ({selectedIds.length})
+            </Button>
+            <Button onClick={handleExportToExcel} variant="outline">
+              <Download className="mr-2 h-4 w-4" />
+              Exportar Excel
+            </Button>
+            <Button onClick={handleLogout} variant="outline">
+              <LogOut className="mr-2 h-4 w-4" />
+              Sair
+            </Button>
+          </div>
         </div>
 
         <Card className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-12">
+                  <Checkbox
+                    checked={selectedIds.length === applications.length && applications.length > 0}
+                    onCheckedChange={handleSelectAll}
+                  />
+                </TableHead>
                 <TableHead>Data</TableHead>
                 <TableHead>Nome</TableHead>
                 <TableHead>Email</TableHead>
@@ -97,13 +194,19 @@ const AdminRespostas = () => {
             <TableBody>
               {applications.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center text-muted-foreground">
+                  <TableCell colSpan={10} className="text-center text-muted-foreground">
                     Nenhuma aplicação recebida ainda
                   </TableCell>
                 </TableRow>
               ) : (
                 applications.map((app, index) => (
                   <TableRow key={index}>
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedIds.includes(index)}
+                        onCheckedChange={(checked) => handleSelectOne(index, checked as boolean)}
+                      />
+                    </TableCell>
                     <TableCell>{new Date(app.timestamp).toLocaleDateString()}</TableCell>
                     <TableCell className="font-medium">{app.nomeCompleto}</TableCell>
                     <TableCell>{app.email}</TableCell>
