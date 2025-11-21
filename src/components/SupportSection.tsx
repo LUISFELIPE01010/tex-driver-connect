@@ -1,5 +1,6 @@
 import { Headphones, MapPin, BarChart3, Laptop, Target, Award } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import supportImage from "@/assets/support-team.jpg";
 
 const SupportSection = () => {
   const benefits = [
@@ -23,11 +24,19 @@ const SupportSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="mb-12 max-w-5xl mx-auto">
+          <img 
+            src={supportImage} 
+            alt="Equipe de suporte TEX Transportes" 
+            className="w-full h-64 md:h-96 object-cover rounded-2xl shadow-xl"
+          />
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
             return (
-              <Card key={index} className="p-6 shadow-[var(--card-shadow)] hover:shadow-xl transition-all hover:-translate-y-1">
+              <Card key={index} className="p-6 shadow-[var(--card-shadow)] hover:shadow-xl transition-all hover:-translate-y-1 animate-fade-in">
                 <Icon className="w-12 h-12 text-primary mb-4" />
                 <p className="text-lg text-foreground font-medium">{benefit.text}</p>
               </Card>
@@ -35,8 +44,8 @@ const SupportSection = () => {
           })}
         </div>
 
-        <div className="text-center mt-12">
-          <p className="text-2xl font-bold text-primary">
+        <div className="text-center">
+          <p className="text-2xl font-bold text-primary mb-4">
             Aqui você não fica sozinho.
           </p>
         </div>
