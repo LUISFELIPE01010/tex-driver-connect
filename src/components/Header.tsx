@@ -10,7 +10,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <img src={logo} alt="TEX Transportes" className="h-12 md:h-14" />
+          <img src={logo} alt="TEX Transportes" className="h-16 md:h-20" />
         </Link>
         
         {isHomePage && (
