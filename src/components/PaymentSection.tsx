@@ -1,5 +1,7 @@
-import { Calendar, Zap, DollarSign, Truck } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Calendar, Zap, DollarSign, Truck, ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const PaymentSection = () => {
   const features = [
@@ -19,17 +21,26 @@ const PaymentSection = () => {
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-12">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <Card key={index} className="p-8 shadow-[var(--card-shadow)] hover:shadow-xl transition-shadow">
+              <Card key={index} className="p-8 shadow-[var(--card-shadow)] hover:shadow-xl transition-all hover:-translate-y-1 animate-fade-in">
                 <Icon className="w-12 h-12 text-primary mb-4" />
                 <h3 className="text-xl font-bold text-foreground mb-2">{feature.title}</h3>
                 <p className="text-lg text-muted-foreground">{feature.description}</p>
               </Card>
             );
           })}
+        </div>
+
+        <div className="text-center">
+          <Button asChild size="lg" className="text-lg px-8 py-6 shadow-xl hover:scale-105 transition-transform">
+            <Link to="/cadastro">
+              Cadastre-se Agora
+              <ArrowRight className="ml-2" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>

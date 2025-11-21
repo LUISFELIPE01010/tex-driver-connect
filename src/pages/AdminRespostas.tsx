@@ -28,8 +28,7 @@ const AdminRespostas = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simple password check (in production, use proper authentication)
-    if (password === "tex2024admin") {
+    if (password === "tex2025admin") {
       sessionStorage.setItem("admin_auth", "authenticated");
       setIsAuthenticated(true);
       loadApplications();
