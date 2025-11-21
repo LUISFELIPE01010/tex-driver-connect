@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <img src={logo} alt="TEX Transportes" className="h-8" />
-            <p className="text-sm opacity-80">© 2025 TEX Transportes. Todos os direitos reservados.</p>
+            <p className="text-sm opacity-80">© TEX Transportes. Todos os direitos reservados.</p>
           </div>
           
           <Link 
