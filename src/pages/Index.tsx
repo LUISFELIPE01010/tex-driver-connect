@@ -8,13 +8,11 @@ import VanOptions from "@/components/VanOptions";
 import Requirements from "@/components/Requirements";
 import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
-
 const Index = () => {
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Header />
       <Hero />
-      <EarningsPotential />
+      
       <MarketStrength />
       <SupportSection />
       <PaymentSection />
@@ -22,8 +20,6 @@ const Index = () => {
       <Requirements />
       <FinalCTA />
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;

@@ -2,15 +2,12 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-van-road.jpg";
-
 const Hero = () => {
-  return (
-    <section className="relative min-h-[700px] md:min-h-[800px] flex items-center overflow-hidden">
-      <div 
-        className="absolute inset-0 bg-cover bg-center animate-subtle-zoom"
-        style={{ backgroundImage: `url(${heroImage})` }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-secondary/95 via-secondary/80 to-transparent" />
+  return <section className="relative min-h-[700px] md:min-h-[800px] flex items-center overflow-hidden">
+      <div className="absolute inset-0 bg-cover bg-center animate-subtle-zoom" style={{
+      backgroundImage: `url(${heroImage})`
+    }}>
+        <div className="absolute inset-0 bg-gradient-to-r from-secondary/95 via-secondary/80 to-transparent px-px" />
       </div>
       
       <div className="container mx-auto px-4 py-20 relative z-10">
@@ -43,8 +40,6 @@ const Hero = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default Hero;
