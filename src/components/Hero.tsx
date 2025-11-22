@@ -11,7 +11,7 @@ const Hero = () => {
           backgroundImage: `url(${heroImage})`,
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/60 to-transparent" />
       </div>
 
       <div className="container mx-auto px-4 py-20 relative z-10">
