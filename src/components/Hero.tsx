@@ -2,35 +2,39 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-van-road.jpg";
+
 const Hero = () => {
-  return <section className="relative min-h-[700px] md:min-h-[800px] flex items-center overflow-hidden">
-      <div className="absolute inset-0 bg-cover bg-center" style={{
-      backgroundImage: `url(${heroImage})`
-    }}>
+  return (
+    <section className="relative min-h-[500px] md:min-h-[600px] flex items-center overflow-hidden">
+      <div 
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${heroImage})`,
+          backgroundPosition: 'center center'
+        }}
+      >
         <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/60 to-transparent" />
       </div>
 
-      <div className="container mx-auto px-4 py-20 relative z-10">
+      <div className="container mx-auto px-4 py-12 md:py-20 relative z-10">
         <div className="max-w-4xl animate-fade-in">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+          <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">
             <span className="text-background">Trabalhe como Driver de Cargovan</span>
-            <span className="block text-4xl md:text-6xl lg:text-7xl mt-4 animate-pulse-slow text-[#fd5e02]">
+            <span className="block text-3xl md:text-6xl lg:text-7xl mt-3 md:mt-4 animate-pulse-slow text-[#fd5e02]">
               $10.000 a $16.000/mês
             </span>
-            <span className="block text-2xl md:text-3xl lg:text-4xl text-background/95 mt-4">
+            <span className="block text-xl md:text-3xl lg:text-4xl text-background/95 mt-3 md:mt-4">
               com suporte completo da TEX Transportes
             </span>
           </h1>
 
-          <div className="h-1 w-24 bg-primary my-6 rounded-full"></div>
+          <div className="h-1 w-24 bg-primary my-4 md:my-6 rounded-full"></div>
 
-          <p className="text-lg md:text-xl text-background/90 mb-8 leading-relaxed max-w-3xl">
-            O mercado de transporte <strong className="text-primary">nunca para</strong> — e agora é sua oportunidade de
-            entrar em um setor que cresce todos os anos. Se você quer ganhar bem, reorganizar sua vida financeira e ter
-            estabilidade, dirigir cargovan é hoje uma das formas mais sólidas de alcançar isso nos Estados Unidos.
-          </p>
-
-          <Button asChild size="lg" className="text-lg px-10 py-7 shadow-2xl hover:scale-105 transition-all animate-bounce-subtle">
+          <Button 
+            asChild 
+            size="lg" 
+            className="text-base md:text-lg px-6 md:px-10 py-5 md:py-7 shadow-2xl hover:scale-105 transition-all animate-bounce-subtle w-full sm:w-auto"
+          >
             <Link to="/cadastro">
               👉 Quero me Cadastrar e Começar Hoje
               <ArrowRight className="ml-2" />
@@ -38,6 +42,8 @@ const Hero = () => {
           </Button>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default Hero;
