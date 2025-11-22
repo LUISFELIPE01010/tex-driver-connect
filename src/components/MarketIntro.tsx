@@ -7,8 +7,8 @@ const MarketIntro = () => {
             O mercado de transporte nunca para
           </p>
           <p className="text-xl md:text-2xl lg:text-3xl text-foreground/90 leading-relaxed text-center font-normal">
-            E agora é sua oportunidade de entrar em um setor que cresce todos os anos. Se você quer ganhar bem, reorganizar sua vida
-            financeira e ter estabilidade, dirigir cargovan é hoje uma das formas mais sólidas de alcançar isso nos
+            E agora é sua oportunidade de entrar em um setor que cresce todos os anos. Se você quer <span className="text-orange-500 font-semibold">ganhar bem</span>, <span className="text-orange-500 font-semibold">reorganizar sua vida
+            financeira</span> e <span className="text-orange-500 font-semibold">ter estabilidade</span>, dirigir cargovan é hoje uma das formas mais sólidas de alcançar isso nos
             Estados Unidos.
           </p>
         </div>
