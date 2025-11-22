@@ -3,14 +3,10 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-van-road.jpg";
 const Hero = () => {
-  return (
-    <section className="relative min-h-[700px] md:min-h-[800px] flex items-center overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${heroImage})`,
-        }}
-      >
+  return <section className="relative min-h-[700px] md:min-h-[800px] flex items-center overflow-hidden">
+      <div className="absolute inset-0 bg-cover bg-center" style={{
+      backgroundImage: `url(${heroImage})`
+    }}>
         <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/60 to-transparent" />
       </div>
 
@@ -18,7 +14,7 @@ const Hero = () => {
         <div className="max-w-4xl animate-fade-in">
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
             <span className="text-background">Trabalhe como Driver de Cargovan</span>
-            <span className="block text-4xl md:text-6xl lg:text-7xl text-primary mt-4 animate-pulse-slow">
+            <span className="block text-4xl md:text-6xl lg:text-7xl mt-4 animate-pulse-slow text-[#e65827]">
               $10.000 a $16.000/mês
             </span>
             <span className="block text-2xl md:text-3xl lg:text-4xl text-background/95 mt-4">
@@ -34,11 +30,7 @@ const Hero = () => {
             estabilidade, dirigir cargovan é hoje uma das formas mais sólidas de alcançar isso nos Estados Unidos.
           </p>
 
-          <Button
-            asChild
-            size="lg"
-            className="text-lg px-10 py-7 shadow-2xl hover:scale-105 transition-all animate-bounce-subtle"
-          >
+          <Button asChild size="lg" className="text-lg px-10 py-7 shadow-2xl hover:scale-105 transition-all animate-bounce-subtle">
             <Link to="/cadastro">
               👉 Quero me Cadastrar e Começar Hoje
               <ArrowRight className="ml-2" />
@@ -46,7 +38,6 @@ const Hero = () => {
           </Button>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
 export default Hero;
