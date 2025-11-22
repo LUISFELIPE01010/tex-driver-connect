@@ -249,11 +249,11 @@ const AdminRespostas = () => {
                     <div className="grid md:grid-cols-2 gap-3 text-sm">
                       <div>
                         <span className="text-muted-foreground">Email:</span>
-                        <p className="font-medium">{app.email}</p>
+                        <p className="font-medium">{app.email || "Não informado"}</p>
                       </div>
                       <div>
                         <span className="text-muted-foreground">Telefone:</span>
-                        <p className="font-medium">{app.telefone}</p>
+                        <p className="font-medium">{app.telefone || "Não informado"}</p>
                       </div>
                     </div>
                   </div>
@@ -266,11 +266,11 @@ const AdminRespostas = () => {
                     <div className="grid md:grid-cols-3 gap-3 text-sm">
                       <div>
                         <span className="text-muted-foreground">Idade:</span>
-                        <p className="font-medium">{app.idade} anos</p>
+                        <p className="font-medium">{app.idade ? `${app.idade} anos` : "Não informado"}</p>
                       </div>
                       <div>
                         <span className="text-muted-foreground">Gênero:</span>
-                        <p className="font-medium capitalize">{app.genero}</p>
+                        <p className="font-medium capitalize">{app.genero || "Não informado"}</p>
                       </div>
                       <div>
                         <span className="text-muted-foreground">Nacionalidade:</span>
@@ -278,19 +278,19 @@ const AdminRespostas = () => {
                       </div>
                       <div>
                         <span className="text-muted-foreground">Altura:</span>
-                        <p className="font-medium">{app.altura} cm</p>
+                        <p className="font-medium">{app.altura ? `${app.altura} cm` : "Não informado"}</p>
                       </div>
                       <div>
                         <span className="text-muted-foreground">Peso:</span>
-                        <p className="font-medium">{app.peso} kg</p>
+                        <p className="font-medium">{app.peso ? `${app.peso} kg` : "Não informado"}</p>
                       </div>
                       <div>
                         <span className="text-muted-foreground">Tem Filhos:</span>
-                        <p className="font-medium capitalize">{app.temFilhos}</p>
+                        <p className="font-medium capitalize">{app.temFilhos || "Não informado"}</p>
                       </div>
                       <div>
                         <span className="text-muted-foreground">Mora Sozinho:</span>
-                        <p className="font-medium capitalize">{app.moraSozinho}</p>
+                        <p className="font-medium capitalize">{app.moraSozinho || "Não informado"}</p>
                       </div>
                     </div>
                   </div>
@@ -302,28 +302,24 @@ const AdminRespostas = () => {
                     <h4 className="font-semibold mb-3">Experiência Profissional</h4>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <span className="text-muted-foreground">Experiência como driver profissional:</span>
-                        <p className="font-medium capitalize">{app.temExperiencia}</p>
-                      </div>
-                      {app.temExperiencia === "sim" && (
-                        <>
-                          <div>
-                            <span className="text-muted-foreground">Empresas anteriores:</span>
-                            <p className="font-medium">{app.empresasAnteriores || "Não informado"}</p>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground">Tempo de trabalho:</span>
-                            <p className="font-medium">{app.tempoTrabalho || "Não informado"}</p>
-                          </div>
-                        </>
-                      )}
-                      <div>
-                        <span className="text-muted-foreground">Dirigiu fora do estado:</span>
-                        <p className="font-medium capitalize">{app.dirigiuForaEstado}</p>
+                        <span className="text-muted-foreground">Experiência como driver profissional (não Uber):</span>
+                        <p className="font-medium capitalize">{app.temExperiencia || "Não informado"}</p>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Empregado atualmente:</span>
-                        <p className="font-medium capitalize">{app.empregoAtual}</p>
+                        <span className="text-muted-foreground">Empresas anteriores:</span>
+                        <p className="font-medium">{app.empresasAnteriores || "Não informado"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Tempo de trabalho em cada empresa:</span>
+                        <p className="font-medium">{app.tempoTrabalho || "Não informado"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Já dirigiu fora do estado:</span>
+                        <p className="font-medium capitalize">{app.dirigiuForaEstado || "Não informado"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Está empregado atualmente:</span>
+                        <p className="font-medium capitalize">{app.empregoAtual || "Não informado"}</p>
                       </div>
                     </div>
                   </div>
@@ -338,27 +334,31 @@ const AdminRespostas = () => {
                     </h4>
                     <div className="grid md:grid-cols-2 gap-3 text-sm">
                       <div>
-                        <span className="text-muted-foreground">Status Legal:</span>
-                        <p className="font-medium capitalize">{app.workPermit?.replace('-', ' ')}</p>
+                        <span className="text-muted-foreground">Status Legal (Work Permit/Green Card/Cidadão):</span>
+                        <p className="font-medium capitalize">{app.workPermit?.replace('-', ' ') || "Não informado"}</p>
                       </div>
                       <div>
                         <span className="text-muted-foreground">Nível de Inglês:</span>
-                        <p className="font-medium capitalize">{app.nivelIngles}</p>
+                        <p className="font-medium capitalize">{app.nivelIngles || "Não informado"}</p>
                       </div>
                     </div>
                   </div>
 
                   <Separator />
 
-                  {/* Empresa (se aplicável) */}
-                  {app.possuiEmpresa === "sim" && (
-                    <>
+                  {/* Empresa */}
+                  <div>
+                    <h4 className="font-semibold mb-3 flex items-center gap-2">
+                      <Building className="h-4 w-4" />
+                      Informações de Empresa
+                    </h4>
+                    <div className="space-y-3 text-sm">
                       <div>
-                        <h4 className="font-semibold mb-3 flex items-center gap-2">
-                          <Building className="h-4 w-4" />
-                          Empresa
-                        </h4>
-                        <div className="grid md:grid-cols-2 gap-3 text-sm">
+                        <span className="text-muted-foreground">Possui empresa aberta:</span>
+                        <p className="font-medium capitalize">{app.possuiEmpresa || "Não informado"}</p>
+                      </div>
+                      {app.possuiEmpresa === "sim" && (
+                        <>
                           <div>
                             <span className="text-muted-foreground">Nome da empresa:</span>
                             <p className="font-medium">{app.nomeEmpresa || "Não informado"}</p>
@@ -367,11 +367,12 @@ const AdminRespostas = () => {
                             <span className="text-muted-foreground">EIN Number:</span>
                             <p className="font-medium">{app.einNumber || "Não informado"}</p>
                           </div>
-                        </div>
-                      </div>
-                      <Separator />
-                    </>
-                  )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <Separator />
 
                   {/* Saúde */}
                   <div>
@@ -383,7 +384,7 @@ const AdminRespostas = () => {
                       </div>
                       <div>
                         <span className="text-muted-foreground">Usa medicamentos controlados:</span>
-                        <p className="font-medium capitalize">{app.medicamentosControlados}</p>
+                        <p className="font-medium capitalize">{app.medicamentosControlados || "Não informado"}</p>
                       </div>
                     </div>
                   </div>
@@ -395,17 +396,15 @@ const AdminRespostas = () => {
                     <h4 className="font-semibold mb-3">Disponibilidade</h4>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <span className="text-muted-foreground">Disponível imediatamente:</span>
-                        <p className="font-medium capitalize">{app.disponivelImediato}</p>
+                        <span className="text-muted-foreground">Disponível para começar imediatamente:</span>
+                        <p className="font-medium capitalize">{app.disponivelImediato || "Não informado"}</p>
                       </div>
-                      {app.disponivelImediato === "nao" && app.dataInicio && (
-                        <div>
-                          <span className="text-muted-foreground">Data de início:</span>
-                          <p className="font-medium">
-                            {new Date(app.dataInicio).toLocaleDateString('pt-BR')}
-                          </p>
-                        </div>
-                      )}
+                      <div>
+                        <span className="text-muted-foreground">Data de início pretendida:</span>
+                        <p className="font-medium">
+                          {app.dataInicio ? new Date(app.dataInicio).toLocaleDateString('pt-BR') : "Não informado"}
+                        </p>
+                      </div>
                     </div>
                   </div>
 
@@ -414,7 +413,7 @@ const AdminRespostas = () => {
                   {/* Motivação */}
                   <div>
                     <h4 className="font-semibold mb-3">Motivação</h4>
-                    <p className="text-sm leading-relaxed">{app.motivacao}</p>
+                    <p className="text-sm leading-relaxed">{app.motivacao || "Não informado"}</p>
                   </div>
                 </CardContent>
               </Card>
