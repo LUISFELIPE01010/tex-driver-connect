@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import MarketIntro from "@/components/MarketIntro";
 import EarningsPotential from "@/components/EarningsPotential";
 import MarketStrength from "@/components/MarketStrength";
 import SupportSection from "@/components/SupportSection";
@@ -12,6 +13,7 @@ const Index = () => {
   return <div className="min-h-screen">
       <Header />
       <Hero />
+      <MarketIntro />
       
       <MarketStrength />
       <SupportSection />
