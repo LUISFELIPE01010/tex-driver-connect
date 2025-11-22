@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { LogOut, Trash2, Download } from "lucide-react";
+import { LogOut, Trash2, Download, Calendar, User, Mail, Phone, Building, Globe } from "lucide-react";
 import * as XLSX from "xlsx";
 import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 const AdminRespostas = () => {
   const navigate = useNavigate();
@@ -103,9 +104,26 @@ const AdminRespostas = () => {
       Email: app.email,
       Telefone: app.telefone,
       Idade: app.idade,
-      "Experiência": app.temExperiencia,
-      Inglês: app.nivelIngles,
-      "Disponível": app.disponivelImediato,
+      Gênero: app.genero,
+      Nacionalidade: app.nacionalidade,
+      "Tem Experiência": app.temExperiencia,
+      "Empresas Anteriores": app.empresasAnteriores,
+      "Tempo de Trabalho": app.tempoTrabalho,
+      "Dirigiu Fora do Estado": app.dirigiuForaEstado,
+      "Tem Filhos": app.temFilhos,
+      "Mora Sozinho": app.moraSozinho,
+      "Work Permit": app.workPermit,
+      "Problema de Saúde": app.problemaSaude,
+      "Medicamentos Controlados": app.medicamentosControlados,
+      "Disponível Imediato": app.disponivelImediato,
+      "Data de Início": app.dataInicio,
+      "Nível de Inglês": app.nivelIngles,
+      "Altura (cm)": app.altura,
+      "Peso (kg)": app.peso,
+      "Possui Empresa": app.possuiEmpresa,
+      "Nome da Empresa": app.nomeEmpresa,
+      "EIN Number": app.einNumber,
+      "Emprego Atual": app.empregoAtual,
       Motivação: app.motivacao,
     }));
 
@@ -170,58 +188,239 @@ const AdminRespostas = () => {
           </div>
         </div>
 
-        <Card className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-12">
-                  <Checkbox
-                    checked={selectedIds.length === applications.length && applications.length > 0}
-                    onCheckedChange={handleSelectAll}
-                  />
-                </TableHead>
-                <TableHead>Data</TableHead>
-                <TableHead>Nome</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Telefone</TableHead>
-                <TableHead>Idade</TableHead>
-                <TableHead>Experiência</TableHead>
-                <TableHead>Inglês</TableHead>
-                <TableHead>Disponível</TableHead>
-                <TableHead>Motivação</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {applications.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={10} className="text-center text-muted-foreground">
-                    Nenhuma aplicação recebida ainda
-                  </TableCell>
-                </TableRow>
-              ) : (
-                applications.map((app, index) => (
-                  <TableRow key={index}>
-                    <TableCell>
+        {applications.length === 0 ? (
+          <Card className="p-12 text-center">
+            <p className="text-muted-foreground">Nenhuma aplicação recebida ainda</p>
+          </Card>
+        ) : (
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 mb-4">
+              <Checkbox
+                checked={selectedIds.length === applications.length && applications.length > 0}
+                onCheckedChange={handleSelectAll}
+              />
+              <span className="text-sm text-muted-foreground">
+                Selecionar todos ({applications.length})
+              </span>
+            </div>
+
+            {applications.map((app, index) => (
+              <Card key={index} className="relative">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-3">
                       <Checkbox
                         checked={selectedIds.includes(index)}
                         onCheckedChange={(checked) => handleSelectOne(index, checked as boolean)}
+                        className="mt-1"
                       />
-                    </TableCell>
-                    <TableCell>{new Date(app.timestamp).toLocaleDateString()}</TableCell>
-                    <TableCell className="font-medium">{app.nomeCompleto}</TableCell>
-                    <TableCell>{app.email}</TableCell>
-                    <TableCell>{app.telefone}</TableCell>
-                    <TableCell>{app.idade}</TableCell>
-                    <TableCell>{app.temExperiencia}</TableCell>
-                    <TableCell>{app.nivelIngles}</TableCell>
-                    <TableCell>{app.disponivelImediato}</TableCell>
-                    <TableCell className="max-w-xs truncate">{app.motivacao}</TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </Card>
+                      <div>
+                        <CardTitle className="text-xl">{app.nomeCompleto}</CardTitle>
+                        <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
+                          <Calendar className="h-4 w-4" />
+                          {new Date(app.timestamp).toLocaleDateString('pt-BR', { 
+                            day: '2-digit', 
+                            month: '2-digit', 
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {app.disponivelImediato === "sim" && (
+                        <Badge variant="default">Disponível Imediato</Badge>
+                      )}
+                      {app.temExperiencia === "sim" && (
+                        <Badge variant="secondary">Com Experiência</Badge>
+                      )}
+                    </div>
+                  </div>
+                </CardHeader>
+
+                <CardContent className="space-y-6">
+                  {/* Informações de Contato */}
+                  <div>
+                    <h4 className="font-semibold mb-3 flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      Informações de Contato
+                    </h4>
+                    <div className="grid md:grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Email:</span>
+                        <p className="font-medium">{app.email}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Telefone:</span>
+                        <p className="font-medium">{app.telefone}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Dados Pessoais */}
+                  <div>
+                    <h4 className="font-semibold mb-3">Dados Pessoais</h4>
+                    <div className="grid md:grid-cols-3 gap-3 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Idade:</span>
+                        <p className="font-medium">{app.idade} anos</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Gênero:</span>
+                        <p className="font-medium capitalize">{app.genero}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Nacionalidade:</span>
+                        <p className="font-medium">{app.nacionalidade || "Não informado"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Altura:</span>
+                        <p className="font-medium">{app.altura} cm</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Peso:</span>
+                        <p className="font-medium">{app.peso} kg</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Tem Filhos:</span>
+                        <p className="font-medium capitalize">{app.temFilhos}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Mora Sozinho:</span>
+                        <p className="font-medium capitalize">{app.moraSozinho}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Experiência Profissional */}
+                  <div>
+                    <h4 className="font-semibold mb-3">Experiência Profissional</h4>
+                    <div className="space-y-3 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Experiência como driver profissional:</span>
+                        <p className="font-medium capitalize">{app.temExperiencia}</p>
+                      </div>
+                      {app.temExperiencia === "sim" && (
+                        <>
+                          <div>
+                            <span className="text-muted-foreground">Empresas anteriores:</span>
+                            <p className="font-medium">{app.empresasAnteriores || "Não informado"}</p>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Tempo de trabalho:</span>
+                            <p className="font-medium">{app.tempoTrabalho || "Não informado"}</p>
+                          </div>
+                        </>
+                      )}
+                      <div>
+                        <span className="text-muted-foreground">Dirigiu fora do estado:</span>
+                        <p className="font-medium capitalize">{app.dirigiuForaEstado}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Empregado atualmente:</span>
+                        <p className="font-medium capitalize">{app.empregoAtual}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Documentação e Idiomas */}
+                  <div>
+                    <h4 className="font-semibold mb-3 flex items-center gap-2">
+                      <Globe className="h-4 w-4" />
+                      Documentação e Idiomas
+                    </h4>
+                    <div className="grid md:grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Status Legal:</span>
+                        <p className="font-medium capitalize">{app.workPermit?.replace('-', ' ')}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Nível de Inglês:</span>
+                        <p className="font-medium capitalize">{app.nivelIngles}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Empresa (se aplicável) */}
+                  {app.possuiEmpresa === "sim" && (
+                    <>
+                      <div>
+                        <h4 className="font-semibold mb-3 flex items-center gap-2">
+                          <Building className="h-4 w-4" />
+                          Empresa
+                        </h4>
+                        <div className="grid md:grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <span className="text-muted-foreground">Nome da empresa:</span>
+                            <p className="font-medium">{app.nomeEmpresa || "Não informado"}</p>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">EIN Number:</span>
+                            <p className="font-medium">{app.einNumber || "Não informado"}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <Separator />
+                    </>
+                  )}
+
+                  {/* Saúde */}
+                  <div>
+                    <h4 className="font-semibold mb-3">Informações de Saúde</h4>
+                    <div className="space-y-3 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Problema de saúde:</span>
+                        <p className="font-medium">{app.problemaSaude || "Não informado"}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Usa medicamentos controlados:</span>
+                        <p className="font-medium capitalize">{app.medicamentosControlados}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Disponibilidade */}
+                  <div>
+                    <h4 className="font-semibold mb-3">Disponibilidade</h4>
+                    <div className="space-y-3 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Disponível imediatamente:</span>
+                        <p className="font-medium capitalize">{app.disponivelImediato}</p>
+                      </div>
+                      {app.disponivelImediato === "nao" && app.dataInicio && (
+                        <div>
+                          <span className="text-muted-foreground">Data de início:</span>
+                          <p className="font-medium">
+                            {new Date(app.dataInicio).toLocaleDateString('pt-BR')}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Motivação */}
+                  <div>
+                    <h4 className="font-semibold mb-3">Motivação</h4>
+                    <p className="text-sm leading-relaxed">{app.motivacao}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
