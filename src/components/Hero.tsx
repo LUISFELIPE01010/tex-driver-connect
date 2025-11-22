@@ -14,7 +14,7 @@ const Hero = () => {
         <div className="max-w-4xl animate-fade-in">
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
             <span className="text-background">Trabalhe como Driver de Cargovan</span>
-            <span className="block text-4xl md:text-6xl lg:text-7xl mt-4 animate-pulse-slow text-[#d94012]">
+            <span className="block text-4xl md:text-6xl lg:text-7xl mt-4 animate-pulse-slow text-[#fda002]">
               $10.000 a $16.000/mês
             </span>
             <span className="block text-2xl md:text-3xl lg:text-4xl text-background/95 mt-4">
