@@ -11,15 +11,13 @@ const Hero = () => {
           backgroundImage: `url(${heroImage})`,
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/60 to-transparent" />
       </div>
 
       <div className="container mx-auto px-4 py-20 relative z-10">
         <div className="max-w-4xl animate-fade-in">
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-            <span className="text-background">
-              Trabalhe como Driver de Cargovan
-            </span>
+            <span className="text-background">Trabalhe como Driver de Cargovan</span>
             <span className="block text-4xl md:text-6xl lg:text-7xl text-primary mt-4 animate-pulse-slow">
               $10.000 a $16.000/mês
             </span>
