@@ -1,25 +1,28 @@
 import { Check } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import vanInterior from "@/assets/van-interior.jpg";
+import { useTranslation } from "@/contexts/TranslationContext";
 
 const VanOptions = () => {
+  const { t } = useTranslation();
+  
   const rentalIncludes = [
-    "Geladeira",
-    "Micro-ondas",
-    "Inversor",
-    "Bateria reserva",
-    "Isolamento térmico",
-    "Seguro",
-    "Suporte de manutenção"
+    t.vanOptions.item1,
+    t.vanOptions.item2,
+    t.vanOptions.item3,
+    t.vanOptions.item4,
+    t.vanOptions.item5,
+    t.vanOptions.item6,
+    t.vanOptions.item7
   ];
 
   const ownVanBenefits = [
-    "Acesso a todos os brokers e contratantes",
-    "Melhores preços",
-    "Taxa fixa semanal (zero porcentagem)",
-    "Modalidade avulsa por porcentagem (opcional)",
-    "Suporte 24/7",
-    "Prioridade de carga"
+    t.vanOptions.ownBenefit1,
+    t.vanOptions.ownBenefit2,
+    t.vanOptions.ownBenefit3,
+    t.vanOptions.ownBenefit4,
+    t.vanOptions.ownBenefit5,
+    t.vanOptions.ownBenefit6
   ];
 
   return (
@@ -29,13 +32,13 @@ const VanOptions = () => {
           {/* Rental Option */}
           <Card className="p-8 shadow-[var(--card-shadow)]">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-              Não tem van? A TEX entrega uma pronta para trabalhar
+              {t.vanOptions.rentalTitle}
             </h2>
             <div className="mb-6">
               <img src={vanInterior} alt="Interior da van equipada" className="rounded-lg w-full h-64 object-cover" />
             </div>
             <p className="text-lg text-muted-foreground mb-6">
-              Aluguel por 12 meses com tudo incluído:
+              {t.vanOptions.rentalSubtitle}
             </p>
             <ul className="space-y-3">
               {rentalIncludes.map((item, index) => (
@@ -46,17 +49,17 @@ const VanOptions = () => {
               ))}
             </ul>
             <p className="text-xl font-bold text-primary mt-8 text-center">
-              Você dirige. A TEX cuida do resto.
+              {t.vanOptions.rentalConclusion}
             </p>
           </Card>
 
           {/* Own Van Option */}
           <Card className="p-8 shadow-[var(--card-shadow)] bg-secondary text-secondary-foreground">
             <h2 className="text-2xl md:text-3xl font-bold mb-6">
-              Já tem van? Ganhe mais com a TEX
+              {t.vanOptions.ownTitle}
             </h2>
             <p className="text-lg mb-6 opacity-90">
-              Traga sua própria van e aproveite vantagens exclusivas:
+              {t.vanOptions.ownSubtitle}
             </p>
             <ul className="space-y-3">
               {ownVanBenefits.map((benefit, index) => (

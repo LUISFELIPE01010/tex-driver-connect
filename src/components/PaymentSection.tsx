@@ -2,13 +2,16 @@ import { Link } from "react-router-dom";
 import { Calendar, Zap, DollarSign, Truck, ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/contexts/TranslationContext";
 
 const PaymentSection = () => {
+  const { t } = useTranslation();
+  
   const features = [
-    { icon: Calendar, title: "Pagamento semanal", description: "Toda sexta-feira" },
-    { icon: Zap, title: "Adiantamento", description: "Possibilidade de adiantamento" },
-    { icon: DollarSign, title: "Baixo investimento inicial", description: "Comece com apenas $300 (primeiro tanque)" },
-    { icon: Truck, title: "Van fornecida", description: "Não tem van? A TEX te fornece uma totalmente equipada" }
+    { icon: Calendar, title: t.paymentSection.feature1Title, description: t.paymentSection.feature1Desc },
+    { icon: Zap, title: t.paymentSection.feature2Title, description: t.paymentSection.feature2Desc },
+    { icon: DollarSign, title: t.paymentSection.feature3Title, description: t.paymentSection.feature3Desc },
+    { icon: Truck, title: t.paymentSection.feature4Title, description: t.paymentSection.feature4Desc }
   ];
 
   return (
@@ -17,7 +20,7 @@ const PaymentSection = () => {
         <div className="text-center mb-12 animate-fade-in">
           <DollarSign className="w-16 h-16 text-primary mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            💵 Pagamentos rápidos e sem complicação
+            {t.paymentSection.title}
           </h2>
         </div>
 
@@ -37,7 +40,7 @@ const PaymentSection = () => {
         <div className="text-center">
           <Button asChild size="lg" className="text-lg px-8 py-6 shadow-xl hover:scale-105 transition-transform">
             <Link to="/cadastro">
-              Cadastre-se Agora
+              {t.paymentSection.cta}
               <ArrowRight className="ml-2" />
             </Link>
           </Button>
