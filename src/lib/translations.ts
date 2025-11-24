@@ -172,6 +172,8 @@ export const translations = {
       currentlyEmployed: "Está empregado atualmente?",
       motivation: "Por que você quer trabalhar com cargovan? Conte brevemente seu interesse.",
       motivationPlaceholder: "Descreva sua motivação...",
+      dataProtection: "Eu autorizo o armazenamento e análise dos meus dados pessoais para fins de recrutamento e futuras oportunidades de trabalho, conforme os termos de uso e política de privacidade.",
+      dataProtectionRequired: "Você precisa aceitar os termos de proteção de dados para continuar",
       submit: "Enviar minha aplicação",
       
       // Toast messages
@@ -352,6 +354,8 @@ export const translations = {
       currentlyEmployed: "Are you currently employed?",
       motivation: "Why do you want to work with cargo vans? Briefly tell us your interest.",
       motivationPlaceholder: "Describe your motivation...",
+      dataProtection: "I authorize the storage and analysis of my personal data for recruitment purposes and future job opportunities, in accordance with the terms of use and privacy policy.",
+      dataProtectionRequired: "You must accept the data protection terms to continue",
       submit: "Submit my application",
       
       // Toast messages
