@@ -13,10 +13,12 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useTranslation } from "@/contexts/TranslationContext";
 
 const AdminRespostas = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -148,8 +150,8 @@ const AdminRespostas = () => {
     } catch (error) {
       console.error('Error loading applications:', error);
       toast({
-        title: "Erro",
-        description: "Erro ao carregar aplicações.",
+        title: t.admin.deleteError.replace('aplicações', 'aplicações'),
+        description: t.admin.deleteError,
         variant: "destructive",
       });
     } finally {
@@ -181,14 +183,14 @@ const AdminRespostas = () => {
   const handleDeleteSelected = async () => {
     if (selectedIds.length === 0) {
       toast({
-        title: "Nenhuma seleção",
-        description: "Selecione pelo menos uma aplicação para excluir.",
+        title: t.admin.noSelection,
+        description: t.admin.noSelectionDescription,
         variant: "destructive",
       });
       return;
     }
 
-    const confirmed = window.confirm(`Deseja excluir ${selectedIds.length} aplicação(ões)?`);
+    const confirmed = window.confirm(`${t.admin.deleteConfirm} ${selectedIds.length} ${t.admin.applications}`);
     if (confirmed) {
       try {
         const { error } = await supabase
@@ -201,14 +203,14 @@ const AdminRespostas = () => {
         setSelectedIds([]);
         loadApplications();
         toast({
-          title: "Sucesso",
-          description: `${selectedIds.length} aplicação(ões) excluída(s).`,
+          title: t.admin.exportSuccess,
+          description: `${selectedIds.length} ${t.admin.deleteSuccess}`,
         });
       } catch (error) {
         console.error('Error deleting applications:', error);
         toast({
-          title: "Erro",
-          description: "Erro ao excluir aplicações.",
+          title: t.admin.deleteError.split('.')[0],
+          description: t.admin.deleteError,
           variant: "destructive",
         });
       }
@@ -218,8 +220,8 @@ const AdminRespostas = () => {
   const handleExportToExcel = () => {
     if (applications.length === 0) {
       toast({
-        title: "Nenhum dado",
-        description: "Não há aplicações para exportar.",
+        title: t.admin.noData,
+        description: t.admin.noDataDescription,
         variant: "destructive",
       });
       return;
@@ -260,8 +262,8 @@ const AdminRespostas = () => {
     XLSX.writeFile(workbook, `tex_aplicacoes_${new Date().toISOString().split('T')[0]}.xlsx`);
     
     toast({
-      title: "Exportado com sucesso",
-      description: "O arquivo Excel foi baixado.",
+      title: t.admin.exportSuccess,
+      description: t.admin.exportDescription,
     });
   };
 
@@ -269,7 +271,7 @@ const AdminRespostas = () => {
     return (
       <div className="min-h-screen bg-muted flex items-center justify-center">
         <Card className="p-12 text-center">
-          <p className="text-muted-foreground">Verificando autenticação...</p>
+          <p className="text-muted-foreground">{t.admin.verifyingAuth}</p>
         </Card>
       </div>
     );
@@ -279,12 +281,12 @@ const AdminRespostas = () => {
     return (
       <div className="min-h-screen bg-muted flex items-center justify-center">
         <Card className="p-12 text-center max-w-md">
-          <h2 className="text-2xl font-bold mb-4">Acesso Negado</h2>
+          <h2 className="text-2xl font-bold mb-4">{t.admin.accessDenied}</h2>
           <p className="text-muted-foreground mb-6">
-            Você precisa fazer login como administrador para acessar esta página.
+            {t.admin.accessDeniedDescription}
           </p>
           <Button onClick={() => navigate("/auth")}>
-            Fazer Login
+            {t.admin.loginButton}
           </Button>
         </Card>
       </div>
@@ -296,7 +298,7 @@ const AdminRespostas = () => {
       <Header />
       <div className="container mx-auto px-4 py-12">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-          <h1 className="text-3xl font-bold">Aplicações Recebidas</h1>
+          <h1 className="text-3xl font-bold">{t.admin.title}</h1>
           <div className="flex flex-wrap gap-2">
             <Select value={dateFilter} onValueChange={setDateFilter}>
               <SelectTrigger className="w-[180px]">
@@ -304,10 +306,10 @@ const AdminRespostas = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todas</SelectItem>
-                <SelectItem value="today">Hoje</SelectItem>
-                <SelectItem value="week">Última semana</SelectItem>
-                <SelectItem value="month">Último mês</SelectItem>
+                <SelectItem value="all">{t.admin.filterAll}</SelectItem>
+                <SelectItem value="today">{t.admin.filterToday}</SelectItem>
+                <SelectItem value="week">{t.admin.filterWeek}</SelectItem>
+                <SelectItem value="month">{t.admin.filterMonth}</SelectItem>
               </SelectContent>
             </Select>
             <Button 
@@ -316,26 +318,26 @@ const AdminRespostas = () => {
               disabled={selectedIds.length === 0 || loadingData}
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              Excluir Selecionados ({selectedIds.length})
+              {t.admin.deleteSelected} ({selectedIds.length})
             </Button>
             <Button onClick={handleExportToExcel} variant="outline" disabled={loadingData}>
               <Download className="mr-2 h-4 w-4" />
-              Exportar Excel
+              {t.admin.exportExcel}
             </Button>
             <Button onClick={handleLogout} variant="outline">
               <LogOut className="mr-2 h-4 w-4" />
-              Sair
+              {t.admin.logout}
             </Button>
           </div>
         </div>
 
         {loadingData ? (
           <Card className="p-12 text-center">
-            <p className="text-muted-foreground">Carregando...</p>
+            <p className="text-muted-foreground">{t.admin.loading}</p>
           </Card>
         ) : applications.length === 0 ? (
           <Card className="p-12 text-center">
-            <p className="text-muted-foreground">Nenhuma aplicação encontrada</p>
+            <p className="text-muted-foreground">{t.admin.noApplications}</p>
           </Card>
         ) : (
           <div className="space-y-4">
@@ -345,7 +347,7 @@ const AdminRespostas = () => {
                 onCheckedChange={handleSelectAll}
               />
               <span className="text-sm text-muted-foreground">
-                Selecionar todos ({applications.length})
+                {t.admin.selectAll} ({applications.length})
               </span>
             </div>
 
@@ -375,10 +377,10 @@ const AdminRespostas = () => {
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {app.disponivelImediato === "sim" && (
-                        <Badge variant="default">Disponível Imediato</Badge>
+                        <Badge variant="default">{t.admin.availableImmediate}</Badge>
                       )}
                       {app.temExperiencia === "sim" && (
-                        <Badge variant="secondary">Com Experiência</Badge>
+                        <Badge variant="secondary">{t.admin.withExperience}</Badge>
                       )}
                     </div>
                   </div>
@@ -389,16 +391,16 @@ const AdminRespostas = () => {
                   <div>
                     <h4 className="font-semibold mb-3 flex items-center gap-2">
                       <UserIcon className="h-4 w-4" />
-                      Informações de Contato
+                      {t.admin.contactInfo}
                     </h4>
                     <div className="grid md:grid-cols-2 gap-3 text-sm">
                       <div>
-                        <span className="text-muted-foreground">Email:</span>
-                        <p className="font-medium">{app.email || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.email}:</span>
+                        <p className="font-medium">{app.email || t.admin.notInformed}</p>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Telefone:</span>
-                        <p className="font-medium">{app.telefone || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.phone}:</span>
+                        <p className="font-medium">{app.telefone || t.admin.notInformed}</p>
                       </div>
                     </div>
                   </div>
@@ -407,35 +409,35 @@ const AdminRespostas = () => {
 
                   {/* Dados Pessoais */}
                   <div>
-                    <h4 className="font-semibold mb-3">Dados Pessoais</h4>
+                    <h4 className="font-semibold mb-3">{t.admin.personalData}</h4>
                     <div className="grid md:grid-cols-3 gap-3 text-sm">
                       <div>
-                        <span className="text-muted-foreground">Idade:</span>
-                        <p className="font-medium">{app.idade ? `${app.idade} anos` : "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.age}:</span>
+                        <p className="font-medium">{app.idade ? `${app.idade} ${t.admin.years}` : t.admin.notInformed}</p>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Gênero:</span>
-                        <p className="font-medium capitalize">{app.genero || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.gender}:</span>
+                        <p className="font-medium capitalize">{app.genero || t.admin.notInformed}</p>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Nacionalidade:</span>
-                        <p className="font-medium">{app.nacionalidade || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.nationality}:</span>
+                        <p className="font-medium">{app.nacionalidade || t.admin.notInformed}</p>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Altura:</span>
-                        <p className="font-medium">{app.altura ? `${app.altura} cm` : "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.height}:</span>
+                        <p className="font-medium">{app.altura ? `${app.altura} cm` : t.admin.notInformed}</p>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Peso:</span>
-                        <p className="font-medium">{app.peso ? `${app.peso} kg` : "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.weight}:</span>
+                        <p className="font-medium">{app.peso ? `${app.peso} kg` : t.admin.notInformed}</p>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Tem Filhos:</span>
-                        <p className="font-medium capitalize">{app.temFilhos || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.hasChildren}:</span>
+                        <p className="font-medium capitalize">{app.temFilhos || t.admin.notInformed}</p>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Mora Sozinho:</span>
-                        <p className="font-medium capitalize">{app.moraSozinho || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.liveAlone}:</span>
+                        <p className="font-medium capitalize">{app.moraSozinho || t.admin.notInformed}</p>
                       </div>
                     </div>
                   </div>
@@ -444,27 +446,27 @@ const AdminRespostas = () => {
 
                   {/* Experiência Profissional */}
                   <div>
-                    <h4 className="font-semibold mb-3">Experiência Profissional</h4>
+                    <h4 className="font-semibold mb-3">{t.admin.professionalExperience}</h4>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <span className="text-muted-foreground">Experiência como driver profissional (não Uber):</span>
-                        <p className="font-medium capitalize">{app.temExperiencia || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.experience}:</span>
+                        <p className="font-medium capitalize">{app.temExperiencia || t.admin.notInformed}</p>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Empresas anteriores:</span>
-                        <p className="font-medium">{app.empresasAnteriores || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.previousCompanies}:</span>
+                        <p className="font-medium">{app.empresasAnteriores || t.admin.notInformed}</p>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Tempo de trabalho em cada empresa:</span>
-                        <p className="font-medium">{app.tempoTrabalho || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.workTime}:</span>
+                        <p className="font-medium">{app.tempoTrabalho || t.admin.notInformed}</p>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Já dirigiu fora do estado:</span>
-                        <p className="font-medium capitalize">{app.dirigiuForaEstado || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.droveOutside}:</span>
+                        <p className="font-medium capitalize">{app.dirigiuForaEstado || t.admin.notInformed}</p>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Está empregado atualmente:</span>
-                        <p className="font-medium capitalize">{app.empregoAtual || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.currentlyEmployed}:</span>
+                        <p className="font-medium capitalize">{app.empregoAtual || t.admin.notInformed}</p>
                       </div>
                     </div>
                   </div>
@@ -475,16 +477,16 @@ const AdminRespostas = () => {
                   <div>
                     <h4 className="font-semibold mb-3 flex items-center gap-2">
                       <Globe className="h-4 w-4" />
-                      Documentação e Idiomas
+                      {t.admin.documentation}
                     </h4>
                     <div className="grid md:grid-cols-2 gap-3 text-sm">
                       <div>
-                        <span className="text-muted-foreground">Status Legal (Work Permit/Green Card/Cidadão):</span>
-                        <p className="font-medium capitalize">{app.workPermit?.replace('-', ' ') || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.legalStatus}:</span>
+                        <p className="font-medium capitalize">{app.workPermit?.replace('-', ' ') || t.admin.notInformed}</p>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Nível de Inglês:</span>
-                        <p className="font-medium capitalize">{app.nivelIngles || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.englishLevel}:</span>
+                        <p className="font-medium capitalize">{app.nivelIngles || t.admin.notInformed}</p>
                       </div>
                     </div>
                   </div>
@@ -495,22 +497,22 @@ const AdminRespostas = () => {
                   <div>
                     <h4 className="font-semibold mb-3 flex items-center gap-2">
                       <Building className="h-4 w-4" />
-                      Informações de Empresa
+                      {t.admin.companyInfo}
                     </h4>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <span className="text-muted-foreground">Possui empresa aberta:</span>
-                        <p className="font-medium capitalize">{app.possuiEmpresa || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.hasCompany}:</span>
+                        <p className="font-medium capitalize">{app.possuiEmpresa || t.admin.notInformed}</p>
                       </div>
                       {app.possuiEmpresa === "sim" && (
                         <>
                           <div>
-                            <span className="text-muted-foreground">Nome da empresa:</span>
-                            <p className="font-medium">{app.nomeEmpresa || "Não informado"}</p>
+                            <span className="text-muted-foreground">{t.admin.companyName}:</span>
+                            <p className="font-medium">{app.nomeEmpresa || t.admin.notInformed}</p>
                           </div>
                           <div>
-                            <span className="text-muted-foreground">EIN Number:</span>
-                            <p className="font-medium">{app.einNumber || "Não informado"}</p>
+                            <span className="text-muted-foreground">{t.admin.einNumber}:</span>
+                            <p className="font-medium">{app.einNumber || t.admin.notInformed}</p>
                           </div>
                         </>
                       )}
@@ -521,15 +523,15 @@ const AdminRespostas = () => {
 
                   {/* Saúde */}
                   <div>
-                    <h4 className="font-semibold mb-3">Informações de Saúde</h4>
+                    <h4 className="font-semibold mb-3">{t.admin.health}</h4>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <span className="text-muted-foreground">Problema de saúde:</span>
-                        <p className="font-medium">{app.problemaSaude || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.healthIssues}:</span>
+                        <p className="font-medium">{app.problemaSaude || t.admin.notInformed}</p>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Usa medicamentos controlados:</span>
-                        <p className="font-medium capitalize">{app.medicamentosControlados || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.controlledMedication}:</span>
+                        <p className="font-medium capitalize">{app.medicamentosControlados || t.admin.notInformed}</p>
                       </div>
                     </div>
                   </div>
@@ -538,16 +540,16 @@ const AdminRespostas = () => {
 
                   {/* Disponibilidade */}
                   <div>
-                    <h4 className="font-semibold mb-3">Disponibilidade</h4>
+                    <h4 className="font-semibold mb-3">{t.admin.availability}</h4>
                     <div className="space-y-3 text-sm">
                       <div>
-                        <span className="text-muted-foreground">Disponível para começar imediatamente:</span>
-                        <p className="font-medium capitalize">{app.disponivelImediato || "Não informado"}</p>
+                        <span className="text-muted-foreground">{t.admin.immediateAvailability}:</span>
+                        <p className="font-medium capitalize">{app.disponivelImediato || t.admin.notInformed}</p>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Data de início pretendida:</span>
+                        <span className="text-muted-foreground">{t.admin.startDate}:</span>
                         <p className="font-medium">
-                          {app.dataInicio ? new Date(app.dataInicio).toLocaleDateString('pt-BR') : "Não informado"}
+                          {app.dataInicio ? new Date(app.dataInicio).toLocaleDateString('pt-BR') : t.admin.notInformed}
                         </p>
                       </div>
                     </div>
@@ -557,8 +559,8 @@ const AdminRespostas = () => {
 
                   {/* Motivação */}
                   <div>
-                    <h4 className="font-semibold mb-3">Motivação</h4>
-                    <p className="text-sm leading-relaxed">{app.motivacao || "Não informado"}</p>
+                    <h4 className="font-semibold mb-3">{t.admin.motivation}</h4>
+                    <p className="text-sm leading-relaxed">{app.motivacao || t.admin.notInformed}</p>
                   </div>
                 </CardContent>
               </Card>
