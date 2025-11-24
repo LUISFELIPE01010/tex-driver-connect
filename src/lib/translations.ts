@@ -184,12 +184,12 @@ export const translations = {
     auth: {
       title: "Área Administrativa",
       subtitle: "Faça login para acessar o painel administrativo",
-      email: "E-mail",
+      email: "Usuário",
       emailPlaceholder: "seu@email.com",
       password: "Senha",
       passwordPlaceholder: "Digite sua senha",
       login: "Entrar",
-      loginError: "E-mail ou senha incorretos",
+      loginError: "Usuário ou senha incorretos",
       loginSuccess: "Login realizado com sucesso!",
       logout: "Sair"
     }
@@ -379,12 +379,12 @@ export const translations = {
     auth: {
       title: "Administrative Area",
       subtitle: "Log in to access the admin panel",
-      email: "Email",
+      email: "Username",
       emailPlaceholder: "your@email.com",
       password: "Password",
       passwordPlaceholder: "Enter your password",
       login: "Login",
-      loginError: "Incorrect email or password",
+      loginError: "Incorrect username or password",
       loginSuccess: "Login successful!",
       logout: "Logout"
     }

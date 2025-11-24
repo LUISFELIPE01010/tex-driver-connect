@@ -45,8 +45,11 @@ const Auth = () => {
     setLoading(true);
 
     try {
+      // Convert username to email format if not already an email
+      const loginEmail = email.includes('@') ? email : `${email}@admin.local`;
+      
       const { error } = await supabase.auth.signInWithPassword({
-        email,
+        email: loginEmail,
         password,
       });
 
@@ -87,10 +90,10 @@ const Auth = () => {
               <Label htmlFor="email">{t.auth.email}</Label>
               <Input
                 id="email"
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={t.auth.emailPlaceholder}
+                placeholder="texadmin"
                 required
               />
             </div>
