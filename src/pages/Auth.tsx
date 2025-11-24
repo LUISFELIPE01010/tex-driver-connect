@@ -93,7 +93,7 @@ const Auth = () => {
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="texadmin"
+                placeholder={t.auth.emailPlaceholder}
                 required
               />
             </div>
