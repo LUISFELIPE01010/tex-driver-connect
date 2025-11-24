@@ -10,6 +10,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useTranslation } from "@/contexts/TranslationContext";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -42,11 +43,20 @@ const Cadastro = () => {
     einNumber: "",
     nacionalidade: "",
     empregoAtual: "",
-    motivacao: ""
+    motivacao: "",
+    aceitaTermos: false
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.aceitaTermos) {
+      toast({
+        title: "⚠️ " + t.cadastro.dataProtectionRequired,
+        variant: "destructive",
+      });
+      return;
+    }
     
     try {
       // Map form data to database schema
@@ -106,7 +116,7 @@ const Cadastro = () => {
     }
   };
 
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -432,6 +442,21 @@ const Cadastro = () => {
                 rows={4}
                 placeholder={t.cadastro.motivationPlaceholder}
               />
+            </div>
+
+            <div className="flex items-start space-x-3 p-4 border border-border rounded-lg bg-muted/30">
+              <Checkbox 
+                id="aceitaTermos"
+                checked={formData.aceitaTermos}
+                onCheckedChange={(checked) => handleChange("aceitaTermos", checked === true)}
+                className="mt-1"
+              />
+              <Label 
+                htmlFor="aceitaTermos" 
+                className="text-sm leading-relaxed cursor-pointer font-normal"
+              >
+                {t.cadastro.dataProtection}
+              </Label>
             </div>
 
             <Button type="submit" size="lg" className="w-full">
