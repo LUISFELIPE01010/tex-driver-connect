@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { User, Session } from "@supabase/supabase-js";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { LogOut, Trash2, Download, Calendar, User, Mail, Phone, Building, Globe, Filter } from "lucide-react";
+import { LogOut, Trash2, Download, Calendar, User as UserIcon, Mail, Phone, Building, Globe, Filter } from "lucide-react";
 import * as XLSX from "xlsx";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
@@ -16,23 +17,79 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 const AdminRespostas = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState("");
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [applications, setApplications] = useState<any[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [dateFilter, setDateFilter] = useState<string>("all");
-  const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
 
   useEffect(() => {
-    const auth = sessionStorage.getItem("admin_auth");
-    if (auth === "authenticated") {
-      setIsAuthenticated(true);
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        // Check admin role when session changes
+        if (session?.user) {
+          setTimeout(() => {
+            checkAdminRole(session.user.id);
+          }, 0);
+        } else {
+          setIsAdmin(false);
+          setLoading(false);
+        }
+      }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        checkAdminRole(session.user.id);
+      } else {
+        setLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (isAdmin) {
       loadApplications();
     }
-  }, [dateFilter]);
+  }, [isAdmin, dateFilter]);
+
+  const checkAdminRole = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .eq('role', 'admin')
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error checking admin role:', error);
+      }
+
+      setIsAdmin(!!data);
+    } catch (error) {
+      console.error('Error checking admin role:', error);
+      setIsAdmin(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const loadApplications = async () => {
-    setLoading(true);
+    setLoadingData(true);
     try {
       let query = supabase
         .from('applications')
@@ -96,25 +153,13 @@ const AdminRespostas = () => {
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setLoadingData(false);
     }
   };
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === "tex2025admin") {
-      sessionStorage.setItem("admin_auth", "authenticated");
-      setIsAuthenticated(true);
-      loadApplications();
-    } else {
-      alert("Senha incorreta");
-    }
-  };
-
-  const handleLogout = () => {
-    sessionStorage.removeItem("admin_auth");
-    setIsAuthenticated(false);
-    setPassword("");
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/auth");
   };
 
   const handleSelectAll = (checked: boolean) => {
@@ -220,26 +265,28 @@ const AdminRespostas = () => {
     });
   };
 
-  if (!isAuthenticated) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-muted">
-        <Header />
-        <div className="container mx-auto px-4 py-12">
-          <Card className="max-w-md mx-auto p-8">
-            <h1 className="text-2xl font-bold mb-6 text-center">Área Administrativa</h1>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <Input
-                  type="password"
-                  placeholder="Digite a senha"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <Button type="submit" className="w-full">Entrar</Button>
-            </form>
-          </Card>
-        </div>
+      <div className="min-h-screen bg-muted flex items-center justify-center">
+        <Card className="p-12 text-center">
+          <p className="text-muted-foreground">Verificando autenticação...</p>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!user || !isAdmin) {
+    return (
+      <div className="min-h-screen bg-muted flex items-center justify-center">
+        <Card className="p-12 text-center max-w-md">
+          <h2 className="text-2xl font-bold mb-4">Acesso Negado</h2>
+          <p className="text-muted-foreground mb-6">
+            Você precisa fazer login como administrador para acessar esta página.
+          </p>
+          <Button onClick={() => navigate("/auth")}>
+            Fazer Login
+          </Button>
+        </Card>
       </div>
     );
   }
@@ -266,12 +313,12 @@ const AdminRespostas = () => {
             <Button 
               onClick={handleDeleteSelected} 
               variant="destructive"
-              disabled={selectedIds.length === 0 || loading}
+              disabled={selectedIds.length === 0 || loadingData}
             >
               <Trash2 className="mr-2 h-4 w-4" />
               Excluir Selecionados ({selectedIds.length})
             </Button>
-            <Button onClick={handleExportToExcel} variant="outline" disabled={loading}>
+            <Button onClick={handleExportToExcel} variant="outline" disabled={loadingData}>
               <Download className="mr-2 h-4 w-4" />
               Exportar Excel
             </Button>
@@ -282,7 +329,7 @@ const AdminRespostas = () => {
           </div>
         </div>
 
-        {loading ? (
+        {loadingData ? (
           <Card className="p-12 text-center">
             <p className="text-muted-foreground">Carregando...</p>
           </Card>
@@ -341,7 +388,7 @@ const AdminRespostas = () => {
                   {/* Informações de Contato */}
                   <div>
                     <h4 className="font-semibold mb-3 flex items-center gap-2">
-                      <User className="h-4 w-4" />
+                      <UserIcon className="h-4 w-4" />
                       Informações de Contato
                     </h4>
                     <div className="grid md:grid-cols-2 gap-3 text-sm">
