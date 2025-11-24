@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { LogOut, Trash2, Download, Calendar, User, Mail, Phone, Building, Globe } from "lucide-react";
+import { LogOut, Trash2, Download, Calendar, User, Mail, Phone, Building, Globe, Filter } from "lucide-react";
 import * as XLSX from "xlsx";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { supabase } from "@/integrations/supabase/client";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const AdminRespostas = () => {
   const navigate = useNavigate();
@@ -17,7 +19,9 @@ const AdminRespostas = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [applications, setApplications] = useState<any[]>([]);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [dateFilter, setDateFilter] = useState<string>("all");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const auth = sessionStorage.getItem("admin_auth");
@@ -25,11 +29,75 @@ const AdminRespostas = () => {
       setIsAuthenticated(true);
       loadApplications();
     }
-  }, []);
+  }, [dateFilter]);
 
-  const loadApplications = () => {
-    const data = JSON.parse(localStorage.getItem("tex_applications") || "[]");
-    setApplications(data);
+  const loadApplications = async () => {
+    setLoading(true);
+    try {
+      let query = supabase
+        .from('applications')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      // Apply date filter
+      if (dateFilter !== "all") {
+        const now = new Date();
+        let startDate: Date;
+
+        switch (dateFilter) {
+          case "today":
+            startDate = new Date(now.setHours(0, 0, 0, 0));
+            break;
+          case "week":
+            startDate = new Date(now.setDate(now.getDate() - 7));
+            break;
+          case "month":
+            startDate = new Date(now.setMonth(now.getMonth() - 1));
+            break;
+          default:
+            startDate = new Date(0);
+        }
+
+        query = query.gte('created_at', startDate.toISOString());
+      }
+
+      const { data, error } = await query;
+
+      if (error) throw error;
+
+      // Parse observacoes JSON field back into individual fields
+      const parsedData = data?.map(app => {
+        try {
+          const observacoes = typeof app.observacoes === 'string' 
+            ? JSON.parse(app.observacoes) 
+            : app.observacoes || {};
+          
+          return {
+            ...app,
+            ...observacoes,
+            nomeCompleto: app.nome,
+            timestamp: app.created_at
+          };
+        } catch (e) {
+          return {
+            ...app,
+            nomeCompleto: app.nome,
+            timestamp: app.created_at
+          };
+        }
+      }) || [];
+
+      setApplications(parsedData);
+    } catch (error) {
+      console.error('Error loading applications:', error);
+      toast({
+        title: "Erro",
+        description: "Erro ao carregar aplicações.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogin = (e: React.FormEvent) => {
@@ -51,21 +119,21 @@ const AdminRespostas = () => {
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedIds(applications.map((_, index) => index));
+      setSelectedIds(applications.map(app => app.id));
     } else {
       setSelectedIds([]);
     }
   };
 
-  const handleSelectOne = (index: number, checked: boolean) => {
+  const handleSelectOne = (id: string, checked: boolean) => {
     if (checked) {
-      setSelectedIds([...selectedIds, index]);
+      setSelectedIds([...selectedIds, id]);
     } else {
-      setSelectedIds(selectedIds.filter(id => id !== index));
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
     }
   };
 
-  const handleDeleteSelected = () => {
+  const handleDeleteSelected = async () => {
     if (selectedIds.length === 0) {
       toast({
         title: "Nenhuma seleção",
@@ -77,14 +145,28 @@ const AdminRespostas = () => {
 
     const confirmed = window.confirm(`Deseja excluir ${selectedIds.length} aplicação(ões)?`);
     if (confirmed) {
-      const newApplications = applications.filter((_, index) => !selectedIds.includes(index));
-      localStorage.setItem("tex_applications", JSON.stringify(newApplications));
-      setApplications(newApplications);
-      setSelectedIds([]);
-      toast({
-        title: "Sucesso",
-        description: `${selectedIds.length} aplicação(ões) excluída(s).`,
-      });
+      try {
+        const { error } = await supabase
+          .from('applications')
+          .delete()
+          .in('id', selectedIds);
+
+        if (error) throw error;
+
+        setSelectedIds([]);
+        loadApplications();
+        toast({
+          title: "Sucesso",
+          description: `${selectedIds.length} aplicação(ões) excluída(s).`,
+        });
+      } catch (error) {
+        console.error('Error deleting applications:', error);
+        toast({
+          title: "Erro",
+          description: "Erro ao excluir aplicações.",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -169,15 +251,27 @@ const AdminRespostas = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           <h1 className="text-3xl font-bold">Aplicações Recebidas</h1>
           <div className="flex flex-wrap gap-2">
+            <Select value={dateFilter} onValueChange={setDateFilter}>
+              <SelectTrigger className="w-[180px]">
+                <Filter className="mr-2 h-4 w-4" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas</SelectItem>
+                <SelectItem value="today">Hoje</SelectItem>
+                <SelectItem value="week">Última semana</SelectItem>
+                <SelectItem value="month">Último mês</SelectItem>
+              </SelectContent>
+            </Select>
             <Button 
               onClick={handleDeleteSelected} 
               variant="destructive"
-              disabled={selectedIds.length === 0}
+              disabled={selectedIds.length === 0 || loading}
             >
               <Trash2 className="mr-2 h-4 w-4" />
               Excluir Selecionados ({selectedIds.length})
             </Button>
-            <Button onClick={handleExportToExcel} variant="outline">
+            <Button onClick={handleExportToExcel} variant="outline" disabled={loading}>
               <Download className="mr-2 h-4 w-4" />
               Exportar Excel
             </Button>
@@ -188,9 +282,13 @@ const AdminRespostas = () => {
           </div>
         </div>
 
-        {applications.length === 0 ? (
+        {loading ? (
           <Card className="p-12 text-center">
-            <p className="text-muted-foreground">Nenhuma aplicação recebida ainda</p>
+            <p className="text-muted-foreground">Carregando...</p>
+          </Card>
+        ) : applications.length === 0 ? (
+          <Card className="p-12 text-center">
+            <p className="text-muted-foreground">Nenhuma aplicação encontrada</p>
           </Card>
         ) : (
           <div className="space-y-4">
@@ -204,14 +302,14 @@ const AdminRespostas = () => {
               </span>
             </div>
 
-            {applications.map((app, index) => (
-              <Card key={index} className="relative">
+            {applications.map((app) => (
+              <Card key={app.id} className="relative">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-3">
                       <Checkbox
-                        checked={selectedIds.includes(index)}
-                        onCheckedChange={(checked) => handleSelectOne(index, checked as boolean)}
+                        checked={selectedIds.includes(app.id)}
+                        onCheckedChange={(checked) => handleSelectOne(app.id, checked as boolean)}
                         className="mt-1"
                       />
                       <div>

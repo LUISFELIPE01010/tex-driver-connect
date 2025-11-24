@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { useTranslation } from "@/contexts/TranslationContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const Cadastro = () => {
   const navigate = useNavigate();
@@ -44,25 +45,65 @@ const Cadastro = () => {
     motivacao: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Store in localStorage (in production, this would go to a backend)
-    const applications = JSON.parse(localStorage.getItem("tex_applications") || "[]");
-    applications.push({
-      ...formData,
-      timestamp: new Date().toISOString()
-    });
-    localStorage.setItem("tex_applications", JSON.stringify(applications));
+    try {
+      // Map form data to database schema
+      const { error } = await supabase
+        .from('applications')
+        .insert({
+          nome: formData.nomeCompleto,
+          email: formData.email,
+          telefone: formData.telefone,
+          cidade: '', // Not collected in form
+          estado: '', // Not collected in form
+          possui_empresa: formData.possuiEmpresa,
+          nome_empresa: formData.nomeEmpresa,
+          cnpj: formData.einNumber, // Using EIN as CNPJ equivalent
+          tipo_cnh: '', // Not collected in form
+          experiencia_transporte: formData.temExperiencia,
+          disponibilidade_imediata: formData.disponivelImediato,
+          tipo_veiculo_interesse: '', // Not collected in form
+          observacoes: JSON.stringify({
+            empresasAnteriores: formData.empresasAnteriores,
+            tempoTrabalho: formData.tempoTrabalho,
+            dirigiuForaEstado: formData.dirigiuForaEstado,
+            idade: formData.idade,
+            genero: formData.genero,
+            temFilhos: formData.temFilhos,
+            moraSozinho: formData.moraSozinho,
+            workPermit: formData.workPermit,
+            problemaSaude: formData.problemaSaude,
+            medicamentosControlados: formData.medicamentosControlados,
+            dataInicio: formData.dataInicio,
+            nivelIngles: formData.nivelIngles,
+            altura: formData.altura,
+            peso: formData.peso,
+            nacionalidade: formData.nacionalidade,
+            empregoAtual: formData.empregoAtual,
+            motivacao: formData.motivacao
+          })
+        });
 
-    toast({
-      title: t.cadastro.successTitle,
-      description: t.cadastro.successDescription,
-    });
+      if (error) throw error;
 
-    setTimeout(() => {
-      navigate("/");
-    }, 2000);
+      toast({
+        title: t.cadastro.successTitle,
+        description: t.cadastro.successDescription,
+      });
+
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      toast({
+        title: "Erro",
+        description: "Ocorreu um erro ao enviar o formulário. Por favor, tente novamente.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleChange = (field: string, value: string) => {
