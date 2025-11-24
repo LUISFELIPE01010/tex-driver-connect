@@ -278,19 +278,8 @@ const AdminRespostas = () => {
   }
 
   if (!user || !isAdmin) {
-    return (
-      <div className="min-h-screen bg-muted flex items-center justify-center">
-        <Card className="p-12 text-center max-w-md">
-          <h2 className="text-2xl font-bold mb-4">{t.admin.accessDenied}</h2>
-          <p className="text-muted-foreground mb-6">
-            {t.admin.accessDeniedDescription}
-          </p>
-          <Button onClick={() => navigate("/auth")}>
-            {t.admin.loginButton}
-          </Button>
-        </Card>
-      </div>
-    );
+    navigate("/auth");
+    return null;
   }
 
   return (

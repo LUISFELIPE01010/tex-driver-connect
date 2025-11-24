@@ -27,7 +27,7 @@ const Footer = () => {
             </a>
             
             <Link 
-              to="/admin-respostas" 
+              to="/auth" 
               className="text-xs text-muted-foreground hover:text-primary transition-colors"
             >
               {t.footer.admin}
