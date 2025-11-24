@@ -1,12 +1,15 @@
 import { Check, AlertCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { useTranslation } from "@/contexts/TranslationContext";
 
 const Requirements = () => {
+  const { t } = useTranslation();
+  
   const requirements = [
-    "Work Permit",
-    "Driver License válida",
-    "Disponibilidade para viajar",
-    "Vontade de crescer rápido"
+    t.requirements.req1,
+    t.requirements.req2,
+    t.requirements.req3,
+    t.requirements.req4
   ];
 
   return (
@@ -15,7 +18,7 @@ const Requirements = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12 animate-fade-in">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Requisitos para começar
+              {t.requirements.title}
             </h2>
           </div>
 
@@ -35,10 +38,10 @@ const Requirements = () => {
               <AlertCircle className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
               <div>
                 <p className="text-lg text-foreground">
-                  Nos primeiros 3 meses você opera como pessoa física.
+                  {t.requirements.note1}
                 </p>
                 <p className="text-lg text-foreground font-semibold">
-                  Depois, a TEX te ajuda a abrir sua LLC/DBA sem complicação.
+                  {t.requirements.note2}
                 </p>
               </div>
             </div>

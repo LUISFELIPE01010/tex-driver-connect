@@ -10,10 +10,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
+import { useTranslation } from "@/contexts/TranslationContext";
 
 const Cadastro = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     temExperiencia: "",
     empresasAnteriores: "",
@@ -54,8 +56,8 @@ const Cadastro = () => {
     localStorage.setItem("tex_applications", JSON.stringify(applications));
 
     toast({
-      title: "Aplicação enviada com sucesso! ✅",
-      description: "Entraremos em contato em breve.",
+      title: t.cadastro.successTitle,
+      description: t.cadastro.successDescription,
     });
 
     setTimeout(() => {
@@ -74,24 +76,24 @@ const Cadastro = () => {
       <div className="container mx-auto px-4 py-12">
         <Card className="max-w-3xl mx-auto p-8 shadow-[var(--card-shadow)]">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-center">
-            Verifique se você se encaixa no perfil
+            {t.cadastro.title}
           </h1>
           <p className="text-lg text-muted-foreground mb-8 text-center">
-            para trabalhar com a TEX Transportes
+            {t.cadastro.subtitle}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Experience */}
             <div className="space-y-2">
-              <Label className="text-base">Tem experiência como driver profissional (não Uber)?</Label>
+              <Label className="text-base">{t.cadastro.hasExperience}</Label>
               <RadioGroup value={formData.temExperiencia} onValueChange={(v) => handleChange("temExperiencia", v)}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="sim" id="exp-sim" />
-                  <Label htmlFor="exp-sim">Sim</Label>
+                  <Label htmlFor="exp-sim">{t.cadastro.yes}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="nao" id="exp-nao" />
-                  <Label htmlFor="exp-nao">Não</Label>
+                  <Label htmlFor="exp-nao">{t.cadastro.no}</Label>
                 </div>
               </RadioGroup>
             </div>
@@ -99,43 +101,43 @@ const Cadastro = () => {
             {formData.temExperiencia === "sim" && (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="empresas">Cite até 2 empresas onde já trabalhou</Label>
+                  <Label htmlFor="empresas">{t.cadastro.companies}</Label>
                   <Input 
                     id="empresas" 
                     value={formData.empresasAnteriores}
                     onChange={(e) => handleChange("empresasAnteriores", e.target.value)}
-                    placeholder="Empresa 1, Empresa 2"
+                    placeholder={t.cadastro.companiesPlaceholder}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="tempo">Quanto tempo trabalhou em cada uma?</Label>
+                  <Label htmlFor="tempo">{t.cadastro.workTime}</Label>
                   <Input 
                     id="tempo" 
                     value={formData.tempoTrabalho}
                     onChange={(e) => handleChange("tempoTrabalho", e.target.value)}
-                    placeholder="Ex: 2 anos, 1 ano"
+                    placeholder={t.cadastro.workTimePlaceholder}
                   />
                 </div>
               </>
             )}
 
             <div className="space-y-2">
-              <Label className="text-base">Já dirigiu fora do estado antes?</Label>
+              <Label className="text-base">{t.cadastro.droveOutside}</Label>
               <RadioGroup value={formData.dirigiuForaEstado} onValueChange={(v) => handleChange("dirigiuForaEstado", v)}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="sim" id="estado-sim" />
-                  <Label htmlFor="estado-sim">Sim</Label>
+                  <Label htmlFor="estado-sim">{t.cadastro.yes}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="nao" id="estado-nao" />
-                  <Label htmlFor="estado-nao">Não</Label>
+                  <Label htmlFor="estado-nao">{t.cadastro.no}</Label>
                 </div>
               </RadioGroup>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="idade">Quantos anos você tem?</Label>
+              <Label htmlFor="idade">{t.cadastro.age}</Label>
               <Input 
                 id="idade" 
                 type="number"
@@ -145,102 +147,102 @@ const Cadastro = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="genero">Gênero</Label>
+              <Label htmlFor="genero">{t.cadastro.gender}</Label>
               <Select value={formData.genero} onValueChange={(v) => handleChange("genero", v)}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione" />
+                  <SelectValue placeholder={t.cadastro.selectGender} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="masculino">Masculino</SelectItem>
-                  <SelectItem value="feminino">Feminino</SelectItem>
-                  <SelectItem value="outro">Outro</SelectItem>
+                  <SelectItem value="masculino">{t.cadastro.male}</SelectItem>
+                  <SelectItem value="feminino">{t.cadastro.female}</SelectItem>
+                  <SelectItem value="outro">{t.cadastro.other}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label className="text-base">Tem filhos?</Label>
+              <Label className="text-base">{t.cadastro.hasChildren}</Label>
               <RadioGroup value={formData.temFilhos} onValueChange={(v) => handleChange("temFilhos", v)}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="sim" id="filhos-sim" />
-                  <Label htmlFor="filhos-sim">Sim</Label>
+                  <Label htmlFor="filhos-sim">{t.cadastro.yes}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="nao" id="filhos-nao" />
-                  <Label htmlFor="filhos-nao">Não</Label>
+                  <Label htmlFor="filhos-nao">{t.cadastro.no}</Label>
                 </div>
               </RadioGroup>
             </div>
 
             <div className="space-y-2">
-              <Label className="text-base">Mora sozinho?</Label>
+              <Label className="text-base">{t.cadastro.livesAlone}</Label>
               <RadioGroup value={formData.moraSozinho} onValueChange={(v) => handleChange("moraSozinho", v)}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="sim" id="sozinho-sim" />
-                  <Label htmlFor="sozinho-sim">Sim</Label>
+                  <Label htmlFor="sozinho-sim">{t.cadastro.yes}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="nao" id="sozinho-nao" />
-                  <Label htmlFor="sozinho-nao">Não</Label>
+                  <Label htmlFor="sozinho-nao">{t.cadastro.no}</Label>
                 </div>
               </RadioGroup>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="workPermit">Possui Work Permit, Green Card ou é cidadão?</Label>
+              <Label htmlFor="workPermit">{t.cadastro.workPermit}</Label>
               <Select value={formData.workPermit} onValueChange={(v) => handleChange("workPermit", v)}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione" />
+                  <SelectValue placeholder={t.cadastro.selectGender} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="work-permit">Work Permit</SelectItem>
-                  <SelectItem value="green-card">Green Card</SelectItem>
-                  <SelectItem value="cidadao">Cidadão</SelectItem>
+                  <SelectItem value="work-permit">{t.cadastro.workPermitOption}</SelectItem>
+                  <SelectItem value="green-card">{t.cadastro.greenCard}</SelectItem>
+                  <SelectItem value="cidadao">{t.cadastro.citizen}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="saude">Tem algum problema de saúde? Se sim, qual?</Label>
+              <Label htmlFor="saude">{t.cadastro.healthIssue}</Label>
               <Input 
                 id="saude" 
                 value={formData.problemaSaude}
                 onChange={(e) => handleChange("problemaSaude", e.target.value)}
-                placeholder="Não / Especifique"
+                placeholder={t.cadastro.healthPlaceholder}
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-base">Usa medicamentos controlados?</Label>
+              <Label className="text-base">{t.cadastro.controlledMeds}</Label>
               <RadioGroup value={formData.medicamentosControlados} onValueChange={(v) => handleChange("medicamentosControlados", v)}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="sim" id="med-sim" />
-                  <Label htmlFor="med-sim">Sim</Label>
+                  <Label htmlFor="med-sim">{t.cadastro.yes}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="nao" id="med-nao" />
-                  <Label htmlFor="med-nao">Não</Label>
+                  <Label htmlFor="med-nao">{t.cadastro.no}</Label>
                 </div>
               </RadioGroup>
             </div>
 
             <div className="space-y-2">
-              <Label className="text-base">Está disponível para começar imediatamente?</Label>
+              <Label className="text-base">{t.cadastro.availableNow}</Label>
               <RadioGroup value={formData.disponivelImediato} onValueChange={(v) => handleChange("disponivelImediato", v)}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="sim" id="disp-sim" />
-                  <Label htmlFor="disp-sim">Sim</Label>
+                  <Label htmlFor="disp-sim">{t.cadastro.yes}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="nao" id="disp-nao" />
-                  <Label htmlFor="disp-nao">Não</Label>
+                  <Label htmlFor="disp-nao">{t.cadastro.no}</Label>
                 </div>
               </RadioGroup>
             </div>
 
             {formData.disponivelImediato === "nao" && (
               <div className="space-y-2">
-                <Label htmlFor="dataInicio">Quando poderia começar?</Label>
+                <Label htmlFor="dataInicio">{t.cadastro.startDate}</Label>
                 <Input 
                   id="dataInicio" 
                   type="date"
@@ -251,23 +253,23 @@ const Cadastro = () => {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="ingles">Fala inglês fluente? Qual o seu nível?</Label>
+              <Label htmlFor="ingles">{t.cadastro.englishLevel}</Label>
               <Select value={formData.nivelIngles} onValueChange={(v) => handleChange("nivelIngles", v)}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione" />
+                  <SelectValue placeholder={t.cadastro.selectGender} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="fluente">Fluente</SelectItem>
-                  <SelectItem value="intermediario">Intermediário</SelectItem>
-                  <SelectItem value="basico">Básico</SelectItem>
-                  <SelectItem value="nao-fala">Não fala</SelectItem>
+                  <SelectItem value="fluente">{t.cadastro.fluent}</SelectItem>
+                  <SelectItem value="intermediario">{t.cadastro.intermediate}</SelectItem>
+                  <SelectItem value="basico">{t.cadastro.basic}</SelectItem>
+                  <SelectItem value="nao-fala">{t.cadastro.noEnglish}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="altura">Altura (cm)</Label>
+                <Label htmlFor="altura">{t.cadastro.height}</Label>
                 <Input 
                   id="altura" 
                   type="number"
@@ -278,7 +280,7 @@ const Cadastro = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="peso">Peso (kg)</Label>
+                <Label htmlFor="peso">{t.cadastro.weight}</Label>
                 <Input 
                   id="peso" 
                   type="number"
@@ -290,7 +292,7 @@ const Cadastro = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="nome">Nome completo *</Label>
+              <Label htmlFor="nome">{t.cadastro.fullName}</Label>
               <Input 
                 id="nome" 
                 required
@@ -300,7 +302,7 @@ const Cadastro = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">E-mail *</Label>
+              <Label htmlFor="email">{t.cadastro.email}</Label>
               <Input 
                 id="email" 
                 type="email"
@@ -311,7 +313,7 @@ const Cadastro = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="telefone">Telefone *</Label>
+              <Label htmlFor="telefone">{t.cadastro.phone}</Label>
               <Input 
                 id="telefone" 
                 type="tel"
@@ -322,15 +324,15 @@ const Cadastro = () => {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-base">Possui empresa aberta?</Label>
+              <Label className="text-base">{t.cadastro.hasCompany}</Label>
               <RadioGroup value={formData.possuiEmpresa} onValueChange={(v) => handleChange("possuiEmpresa", v)}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="sim" id="empresa-sim" />
-                  <Label htmlFor="empresa-sim">Sim</Label>
+                  <Label htmlFor="empresa-sim">{t.cadastro.yes}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="nao" id="empresa-nao" />
-                  <Label htmlFor="empresa-nao">Não</Label>
+                  <Label htmlFor="empresa-nao">{t.cadastro.no}</Label>
                 </div>
               </RadioGroup>
             </div>
@@ -338,7 +340,7 @@ const Cadastro = () => {
             {formData.possuiEmpresa === "sim" && (
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="nomeEmpresa">Nome da empresa</Label>
+                  <Label htmlFor="nomeEmpresa">{t.cadastro.companyName}</Label>
                   <Input 
                     id="nomeEmpresa" 
                     value={formData.nomeEmpresa}
@@ -347,7 +349,7 @@ const Cadastro = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="ein">EIN Number</Label>
+                  <Label htmlFor="ein">{t.cadastro.einNumber}</Label>
                   <Input 
                     id="ein" 
                     value={formData.einNumber}
@@ -358,7 +360,7 @@ const Cadastro = () => {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="nacionalidade">Nacionalidade</Label>
+              <Label htmlFor="nacionalidade">{t.cadastro.nationality}</Label>
               <Input 
                 id="nacionalidade" 
                 value={formData.nacionalidade}
@@ -367,32 +369,32 @@ const Cadastro = () => {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-base">Está empregado atualmente?</Label>
+              <Label className="text-base">{t.cadastro.currentlyEmployed}</Label>
               <RadioGroup value={formData.empregoAtual} onValueChange={(v) => handleChange("empregoAtual", v)}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="sim" id="emprego-sim" />
-                  <Label htmlFor="emprego-sim">Sim</Label>
+                  <Label htmlFor="emprego-sim">{t.cadastro.yes}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="nao" id="emprego-nao" />
-                  <Label htmlFor="emprego-nao">Não</Label>
+                  <Label htmlFor="emprego-nao">{t.cadastro.no}</Label>
                 </div>
               </RadioGroup>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="motivacao">Por que você quer trabalhar com cargovan? Conte brevemente seu interesse.</Label>
+              <Label htmlFor="motivacao">{t.cadastro.motivation}</Label>
               <Textarea 
                 id="motivacao" 
                 value={formData.motivacao}
                 onChange={(e) => handleChange("motivacao", e.target.value)}
                 rows={4}
-                placeholder="Descreva sua motivação..."
+                placeholder={t.cadastro.motivationPlaceholder}
               />
             </div>
 
             <Button type="submit" size="lg" className="w-full">
-              Enviar minha aplicação
+              {t.cadastro.submit}
             </Button>
           </form>
         </Card>
