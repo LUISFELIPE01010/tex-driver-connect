@@ -14,7 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      applications: {
+        Row: {
+          cidade: string
+          cnpj: string | null
+          created_at: string
+          disponibilidade_imediata: string
+          email: string
+          estado: string
+          experiencia_transporte: string
+          id: string
+          nome: string
+          nome_empresa: string | null
+          observacoes: string | null
+          possui_empresa: string
+          telefone: string
+          tipo_cnh: string
+          tipo_veiculo_interesse: string
+          updated_at: string
+        }
+        Insert: {
+          cidade: string
+          cnpj?: string | null
+          created_at?: string
+          disponibilidade_imediata: string
+          email: string
+          estado: string
+          experiencia_transporte: string
+          id?: string
+          nome: string
+          nome_empresa?: string | null
+          observacoes?: string | null
+          possui_empresa: string
+          telefone: string
+          tipo_cnh: string
+          tipo_veiculo_interesse: string
+          updated_at?: string
+        }
+        Update: {
+          cidade?: string
+          cnpj?: string | null
+          created_at?: string
+          disponibilidade_imediata?: string
+          email?: string
+          estado?: string
+          experiencia_transporte?: string
+          id?: string
+          nome?: string
+          nome_empresa?: string | null
+          observacoes?: string | null
+          possui_empresa?: string
+          telefone?: string
+          tipo_cnh?: string
+          tipo_veiculo_interesse?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
