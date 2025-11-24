@@ -179,6 +179,19 @@ export const translations = {
       // Toast messages
       successTitle: "Aplicação enviada com sucesso! ✅",
       successDescription: "Entraremos em contato em breve."
+    },
+    
+    auth: {
+      title: "Área Administrativa",
+      subtitle: "Faça login para acessar o painel administrativo",
+      email: "E-mail",
+      emailPlaceholder: "seu@email.com",
+      password: "Senha",
+      passwordPlaceholder: "Digite sua senha",
+      login: "Entrar",
+      loginError: "E-mail ou senha incorretos",
+      loginSuccess: "Login realizado com sucesso!",
+      logout: "Sair"
     }
   },
   en: {
@@ -361,6 +374,19 @@ export const translations = {
       // Toast messages
       successTitle: "Application submitted successfully! ✅",
       successDescription: "We will contact you soon."
+    },
+    
+    auth: {
+      title: "Administrative Area",
+      subtitle: "Log in to access the admin panel",
+      email: "Email",
+      emailPlaceholder: "your@email.com",
+      password: "Password",
+      passwordPlaceholder: "Enter your password",
+      login: "Login",
+      loginError: "Incorrect email or password",
+      loginSuccess: "Login successful!",
+      logout: "Logout"
     }
   }
 };
