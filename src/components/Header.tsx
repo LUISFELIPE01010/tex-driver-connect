@@ -20,18 +20,18 @@ const Header = () => {
         </Link>
         
         <div className="flex items-center gap-4">
+          {isHomePage && (
+            <Button asChild size="lg" className="shadow-lg">
+              <Link to="/cadastro">{t.header.signUp}</Link>
+            </Button>
+          )}
+          
           <button
             onClick={toggleLanguage}
             className="text-sm font-semibold hover:text-primary transition-colors"
           >
             {language === "pt" ? "EN" : "PT"} | {language === "pt" ? "PT" : "EN"}
           </button>
-          
-          {isHomePage && (
-            <Button asChild size="lg" className="shadow-lg">
-              <Link to="/cadastro">{t.header.signUp}</Link>
-            </Button>
-          )}
         </div>
       </div>
     </header>
